@@ -1,24 +1,86 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 
-function App() {
+import CardsList from "./components/CardsList";
+import Card from "./components/Card";
+import Proposals from "./components/Proposals";
+
+const App = () => {
+  const data = [
+    {
+      id: 1,
+      tag: "METHALI",
+      content: {
+        question: "Akufaae kwa dhiki",
+        answer: "ndie rafiki"
+      },
+      author: 'Alvin'
+    },
+    {
+      id: 2,
+      tag: "KITENDAWILI",
+      content: {
+        question: "Nyumba yangu haina mlango",
+        answer: "YAI"
+      },
+      author: 'Alvin'
+    },
+    {
+      id: 3,
+      tag: "METHALI",
+      content: {
+        question: "Haba na haba",
+        answer: "hujaza kibaba"
+      },
+      author: 'Alvin'
+    },
+    {
+      id: 4,
+      tag: "KITENDAWILI",
+      content: {
+        question: "Kuku wangu katangia mibani",
+        answer: "NANASI"
+      },
+      author: 'Alvin'
+    },
+  ];
+
+  const listItems = data.map(item => <Card key={item.id} data={item} />);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark py-2 fixed-top">
+        <div className="container">
+          <h1 className="navbar-brand fs-1 my-auto text-info">USEMI</h1>
+
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          <div className="collapse navbar-collapse" id="navmenu">
+            <ul className="navbar-nav ms-auto fs-2">
+              <li className="nav-item"><Link to="/" className="nav-link">Library</Link></li>
+              <li className="nav-item"><Link to="/proposals" className="nav-link">Proposals</Link></li>
+              <li className="nav-item"><Link to="/about" className="nav-link">About</Link></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <main className="container mt-5 p-2">
+        <section className="mt-md-4 mx-1 p-1 fs-3">
+          <Route path="/" exact>
+            <CardsList cardItems={listItems} />
+          </Route>
+          <Route path="/proposals">
+            <Proposals />
+            <CardsList cardItems={listItems} />
+          </Route>
+          <Route path="/about">
+            <h2>Just For Fun!</h2>
+          </Route>
+        </section>
+      </main>
+    </Router>
   );
 }
 
