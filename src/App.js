@@ -76,7 +76,7 @@ const App = () => {
             <CardsList cardItems={listItems} />
           </Route>
           <Route path="/about">
-            <h2>Just For Fun!</h2>
+            <h2 className="mt-2 p-1 fs-2 text-center">This project for helping students in my country learn better Swahili!</h2>
           </Route>
         </section>
       </main>
