@@ -96,7 +96,7 @@ const App = () => {
                   </li>) :
                   (<li className="nav-item">
                     <button className="btn btn-info" onClick={() => signIn()}>
-                      <i className="bi bi-google"> SignIn</i>
+                      <i className="bi bi-google"></i> SignIn
                     </button>
                   </li>)
               }
