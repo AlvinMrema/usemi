@@ -1,10 +1,38 @@
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import { useState } from 'react';
+
+// import { auth, provider }
+import firebase from "./firebase/config";
 
 import CardsList from "./components/CardsList";
 import Card from "./components/Card";
 import Proposals from "./components/Proposals";
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      setCurrentUser(user)
+    } else {
+      // User is signed out
+      setCurrentUser(null)
+    }
+  });
+
+  const signIn = () => {
+    let provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signInWithPop(provider)
+      .then((result) => {
+        setCurrentUser(result.user);
+      })
+
+    // setCurrentUser(auth.currentUser);
+  }
+
   const data = [
     {
       id: 1,
@@ -61,6 +89,17 @@ const App = () => {
               <li className="nav-item"><Link to="/" className="nav-link">Library</Link></li>
               <li className="nav-item"><Link to="/proposals" className="nav-link">Proposals</Link></li>
               <li className="nav-item"><Link to="/about" className="nav-link">About</Link></li>
+              {
+                !!currentUser ?
+                  (<li className="nav-item dropdown">
+                    {currentUser.displayName}
+                  </li>) :
+                  (<li className="nav-item">
+                    <button className="btn btn-info" onClick={() => signIn()}>
+                      <i className="bi bi-google"> SignIn</i>
+                    </button>
+                  </li>)
+              }
             </ul>
           </div>
         </div>
@@ -76,7 +115,9 @@ const App = () => {
             <CardsList cardItems={listItems} />
           </Route>
           <Route path="/about">
-            <h2 className="mt-2 p-1 fs-2 text-center">This project for helping students in my country learn better Swahili!</h2>
+            <h2 className="mt-2 p-1 fs-2 text-center">
+              This project is for helping students in my country learn better Swahili!
+            </h2>
           </Route>
         </section>
       </main>
