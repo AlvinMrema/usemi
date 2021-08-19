@@ -1,6 +1,6 @@
 import ProposalForm from "./ProposalForm";
 
-const Proposals = () => {
+const Proposals = ({user}) => {
     return (
         <div className="mt-2">
             <div className="text-end">
@@ -13,7 +13,7 @@ const Proposals = () => {
             {/* <!-- Modal --> */}
             <div className="modal fade" id="enroll" tabIndex="-1" aria-labelledby="enrollLabel" aria-hidden="true">
                 <div className="modal-dialog">
-                    <ProposalForm />
+                    <ProposalForm user={user} />
                 </div>
             </div>
         </div>

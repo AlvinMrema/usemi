@@ -25,12 +25,18 @@ const App = () => {
   const signIn = () => {
     let provider = new firebase.auth.GoogleAuthProvider();
 
-    firebase.auth().signInWithPop(provider)
+    firebase.auth().signInWithPopup(provider)
       .then((result) => {
-        setCurrentUser(result.user);
+        console.log(result)
+        setCurrentUser(result);
       })
+  }
 
-    // setCurrentUser(auth.currentUser);
+  const signOut = () => {
+    firebase.auth().signOut()
+    .then(() => {
+      setCurrentUser({})
+    })
   }
 
   const data = [
@@ -92,7 +98,16 @@ const App = () => {
               {
                 !!currentUser ?
                   (<li className="nav-item dropdown">
-                    {currentUser.displayName}
+                    <p className="nav-link dropdown-toggle text-info mb-0" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                      {currentUser.displayName}
+                    </p>
+                    <ul className="dropdown-menu">
+                      <li className="dropdown--item text-center">
+                        <button className="btn btn-info" onClick={() => signOut()}>
+                          <i className="bi bi-google"></i> SignOut
+                        </button>
+                      </li>
+                    </ul>
                   </li>) :
                   (<li className="nav-item">
                     <button className="btn btn-info" onClick={() => signIn()}>
@@ -111,7 +126,7 @@ const App = () => {
             <CardsList cardItems={listItems} />
           </Route>
           <Route path="/proposals">
-            <Proposals />
+            <Proposals user={currentUser}/>
             <CardsList cardItems={listItems} />
           </Route>
           <Route path="/about">
