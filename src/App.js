@@ -1,17 +1,18 @@
 import { BrowserRouter as Router, Link, Route } from "react-router-dom";
 import { useState } from 'react';
 
-// import { auth, provider }
-import firebase from "./firebase/config";
+import { auth } from "./firebase/config";
 
 import CardsList from "./components/CardsList";
 import Card from "./components/Card";
 import Proposals from "./components/Proposals";
 
+import useFirestore from "./hooks/useFirestore";
+
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
-  firebase.auth().onAuthStateChanged((user) => {
+  auth().onAuthStateChanged((user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
@@ -23,9 +24,9 @@ const App = () => {
   });
 
   const signIn = () => {
-    let provider = new firebase.auth.GoogleAuthProvider();
+    let provider = new auth.GoogleAuthProvider();
 
-    firebase.auth().signInWithPopup(provider)
+    auth().signInWithPopup(provider)
       .then((result) => {
         console.log(result)
         setCurrentUser(result);
@@ -33,52 +34,22 @@ const App = () => {
   }
 
   const signOut = () => {
-    firebase.auth().signOut()
-    .then(() => {
-      setCurrentUser({})
-    })
+    auth().signOut()
+      .then(() => {
+        setCurrentUser(null)
+      })
   }
 
-  const data = [
-    {
-      id: 1,
-      tag: "METHALI",
-      content: {
-        question: "Akufaae kwa dhiki",
-        answer: "ndie rafiki"
-      },
-      author: 'Alvin'
-    },
-    {
-      id: 2,
-      tag: "KITENDAWILI",
-      content: {
-        question: "Nyumba yangu haina mlango",
-        answer: "YAI"
-      },
-      author: 'Alvin'
-    },
-    {
-      id: 3,
-      tag: "METHALI",
-      content: {
-        question: "Haba na haba",
-        answer: "hujaza kibaba"
-      },
-      author: 'Alvin'
-    },
-    {
-      id: 4,
-      tag: "KITENDAWILI",
-      content: {
-        question: "Kuku wangu katangia mibani",
-        answer: "NANASI"
-      },
-      author: 'Alvin'
-    },
-  ];
+  const GetListItems = (collection) => {
+    const { docs } = useFirestore(collection);
+    const listItems = docs.map(item => <Card key={item.id} data={item} />);
 
-  const listItems = data.map(item => <Card key={item.id} data={item} />);
+    return listItems
+  }
+
+  // Proposals Content
+  const proposalListItems = GetListItems("Proposals")
+  const libraryListItems = GetListItems("Library")
 
   return (
     <Router>
@@ -123,11 +94,11 @@ const App = () => {
       <main className="container mt-5 p-2">
         <section className="mt-md-4 mx-1 p-1 fs-3">
           <Route path="/" exact>
-            <CardsList cardItems={listItems} />
+            {<CardsList cardItems={libraryListItems} />}
           </Route>
           <Route path="/proposals">
-            <Proposals user={currentUser}/>
-            <CardsList cardItems={listItems} />
+            <Proposals user={currentUser} />
+            <CardsList cardItems={proposalListItems} />
           </Route>
           <Route path="/about">
             <h2 className="mt-2 p-1 fs-2 text-center">

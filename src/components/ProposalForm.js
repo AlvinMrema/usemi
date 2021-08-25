@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { db } from "../firebase/config";
+
 const ProposalForm = ({ user }) => {
     const [input, setInput] = useState({
         tag: "KITENDAWILI",
@@ -27,7 +29,20 @@ const ProposalForm = ({ user }) => {
     }
 
     const handleSubmit = (e) => {
-        console.log(input)  // Something to be done during content submission
+        const re = /[a-z]|[A-Z]/g;
+
+        // Something to be done during content submission
+        if (re.test(input.question) && re.test(input.answer)) {
+            db.collection("Proposals").add({
+                tag: input.tag,
+                question: input.question,
+                answer: input.tag === "KITENDAWILI" ? input.answer.toUpperCase() : input.answer,
+                contributor: user.displayName
+            })
+            // alert(`Thanks ${user.displayName}! "${input.question}, ${input.answer}" was added.`)
+        } else {
+            alert("Invalid Entry!")
+        }
 
         clearModal();
         e.preventDefault();
@@ -47,7 +62,7 @@ const ProposalForm = ({ user }) => {
             {
                 !!user ?
                     (<div className="modal-body text-dark">
-                        <p className="lead">Fill out this form to add Content to USEMI</p>
+                        <p className="lead">Fill out this form to contribute Content to USEMI</p>
                         <form onSubmit={handleSubmit}>
                             <div className="md-3">
                                 <label htmlFor="tag" className="col-form-label">
