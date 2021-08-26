@@ -28,7 +28,6 @@ const App = () => {
 
     auth().signInWithPopup(provider)
       .then((result) => {
-        console.log(result)
         setCurrentUser(result);
       })
   }
@@ -41,7 +40,7 @@ const App = () => {
   }
 
   const GetListItems = (collection) => {
-    const { docs } = useFirestore(collection);
+    const docs = useFirestore(collection);
     const listItems = docs.map(item => <Card key={item.id} data={item} />);
 
     return listItems

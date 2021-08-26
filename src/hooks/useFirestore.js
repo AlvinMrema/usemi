@@ -19,7 +19,7 @@ const useFirestore = (collection) => {
 
     }, [collection]);
 
-    return { docs };
+    return docs;
 }
 
 export default useFirestore;

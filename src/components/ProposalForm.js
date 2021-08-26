@@ -33,12 +33,21 @@ const ProposalForm = ({ user }) => {
 
         // Something to be done during content submission
         if (re.test(input.question) && re.test(input.answer)) {
-            db.collection("Proposals").add({
-                tag: input.tag,
-                question: input.question,
-                answer: input.tag === "KITENDAWILI" ? input.answer.toUpperCase() : input.answer,
-                contributor: user.displayName
-            })
+            if (user.email === "sonalpha023@gmail.com") {
+                db.collection("Library").add({
+                    tag: input.tag,
+                    question: input.question,
+                    answer: input.tag === "KITENDAWILI" ? input.answer.toUpperCase() : input.answer,
+                    contributor: user.displayName
+                })
+            } else {
+                db.collection("Proposals").add({
+                    tag: input.tag,
+                    question: input.question,
+                    answer: input.tag === "KITENDAWILI" ? input.answer.toUpperCase() : input.answer,
+                    contributor: user.displayName
+                })
+            }
             // alert(`Thanks ${user.displayName}! "${input.question}, ${input.answer}" was added.`)
         } else {
             alert("Invalid Entry!")
